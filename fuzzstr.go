@@ -1,3 +1,4 @@
+// Package fuzzstr implements a fuzzy string search in the style of Sublime Text
 package fuzzstr
 
 type DocID uint32
@@ -31,6 +32,7 @@ func NewIndex(docs []string) Index {
 	return idx
 }
 
+// Query returns all documents which contain the letters in s in order
 func (idx *Index) Query(s string) []Posting {
 
 	var p []Posting = idx.postings[s[0]]
