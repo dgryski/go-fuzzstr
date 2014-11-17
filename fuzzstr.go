@@ -57,6 +57,10 @@ scan:
 
 			if a[aidx].Pos < b[bidx].Pos {
 				result = append(result, b[bidx])
+				aidx++
+				if aidx >= len(a) {
+					break scan
+				}
 			}
 			bidx++
 			if bidx >= len(b) {
