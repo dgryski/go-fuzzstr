@@ -45,6 +45,15 @@ func (idx *Index) Query(s string) []Posting {
 
 }
 
+func (idx *Index) Filter(p []Posting, s string) []Posting {
+
+	for _, r := range []byte(s) {
+		p = intersect(p, idx.postings[r])
+	}
+
+	return p
+}
+
 func intersect(a, b []Posting) []Posting {
 
 	var aidx, bidx int
