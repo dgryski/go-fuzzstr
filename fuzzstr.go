@@ -35,7 +35,7 @@ func NewIndex(docs []string) *Index {
 // Query returns all documents which contain the letters in s in order
 func (idx *Index) Query(s string) []Posting {
 
-	var p []Posting = idx.postings[s[0]]
+	p := idx.postings[s[0]]
 
 	for _, r := range []byte(s[1:]) {
 		p = intersect(p, idx.postings[r])
