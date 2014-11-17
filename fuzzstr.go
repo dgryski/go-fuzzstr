@@ -14,7 +14,7 @@ type Index struct {
 }
 
 // NewIndex returns an index for the strings in docs
-func NewIndex(docs []string) Index {
+func NewIndex(docs []string) *Index {
 
 	idx := Index{
 		postings: make(map[byte][]Posting),
@@ -29,7 +29,7 @@ func NewIndex(docs []string) Index {
 		}
 	}
 
-	return idx
+	return &idx
 }
 
 // Query returns all documents which contain the letters in s in order
