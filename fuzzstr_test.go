@@ -31,16 +31,37 @@ func TestQuery(t *testing.T) {
 
 	idx := NewIndex(docs)
 
-	postings := idx.Query("cac")
-
-	for _, p := range postings {
-		t.Log(docs[p.Doc])
+	tests := []struct {
+		q     string
+		words []string
+	}{
+		{
+			"ac",
+			[]string{"grallic", "chalcosine", "compactness"},
+		},
+		{
+			"cac",
+			[]string{"chalcosine", "compactness"},
+		},
+		{
+			"zz",
+			nil,
+		},
 	}
 
-	postings = idx.Query("ac")
+	for _, tt := range tests {
+		postings := idx.Query(tt.q)
 
-	t.Log()
-	for _, p := range postings {
-		t.Log(docs[p.Doc])
+		if len(postings) != len(tt.words) {
+			t.Errorf("Query(%q)=[%d]string, want [%d]string", tt.q, len(postings), len(tt.words))
+			continue
+		}
+
+		for i, p := range postings {
+			if docs[p.Doc] != tt.words[i] {
+				t.Errorf("Query(%q)[%d]=%q, want %q", tt.q, i, docs[p.Doc], tt.words[i])
+				continue
+			}
+		}
 	}
 }
