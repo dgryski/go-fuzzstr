@@ -4,7 +4,7 @@ type DocID uint32
 
 type Posting struct {
 	Doc DocID
-	pos uint32
+	Pos uint32
 }
 
 type Index struct {
@@ -24,7 +24,7 @@ func NewIndex(docs []string) Index {
 		idx.allDocIDs = append(idx.allDocIDs, docid)
 		for i, r := range []byte(d) {
 			idxr := idx.postings[r]
-			idx.postings[r] = append(idxr, Posting{Doc: docid, pos: uint32(i)})
+			idx.postings[r] = append(idxr, Posting{Doc: docid, Pos: uint32(i)})
 		}
 	}
 
@@ -53,7 +53,7 @@ scan:
 	for aidx < len(a) && bidx < len(b) {
 		for a[aidx].Doc == b[bidx].Doc {
 
-			if a[aidx].pos < b[bidx].pos {
+			if a[aidx].Pos < b[bidx].Pos {
 				result = append(result, b[bidx])
 			}
 			bidx++
