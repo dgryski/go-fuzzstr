@@ -1,13 +1,16 @@
 // Package fuzzstr implements a fuzzy string search in the style of Sublime Text
 package fuzzstr
 
+// DocID is a document ID
 type DocID uint32
 
+//  Posting is a document and character position
 type Posting struct {
 	Doc DocID
 	Pos uint32
 }
 
+// Index is a character index
 type Index struct {
 	postings  map[byte][]Posting
 	allDocIDs []DocID
@@ -55,6 +58,8 @@ func (idx *Index) Filter(p []Posting, s string) []Posting {
 	return p
 }
 
+// intersect returns the intersection of two posting lists with the characters
+// in b occuring later in the string than the entries in a
 func intersect(a, b []Posting) []Posting {
 
 	var aidx, bidx int
