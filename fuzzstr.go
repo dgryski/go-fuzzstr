@@ -45,6 +45,7 @@ func (idx *Index) Query(s string) []Posting {
 
 }
 
+// Filter removes from p all strings that additionally contain characters in s
 func (idx *Index) Filter(p []Posting, s string) []Posting {
 
 	for _, r := range []byte(s) {
