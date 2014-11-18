@@ -54,6 +54,9 @@ func TestQuery(t *testing.T) {
 
 		if len(postings) != len(tt.words) {
 			t.Errorf("Query(%q)=[%d]string, want [%d]string", tt.q, len(postings), len(tt.words))
+			for _, d := range postings {
+				t.Log(docs[d.Doc])
+			}
 			continue
 		}
 
