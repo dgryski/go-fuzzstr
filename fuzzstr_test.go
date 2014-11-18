@@ -47,6 +47,10 @@ func TestQuery(t *testing.T) {
 			"zz",
 			nil,
 		},
+		{
+			"epi",
+			[]string{"reprecipitation", "especial"},
+		},
 	}
 
 	for _, tt := range tests {
