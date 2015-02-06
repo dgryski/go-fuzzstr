@@ -40,8 +40,11 @@ func (idx *Index) Query(s string) []Posting {
 
 	p := idx.postings[s[0]]
 
+	result := make([]Posting, len(p))
+
 	for _, r := range []byte(s[1:]) {
-		p = intersect(p, idx.postings[r])
+		result = intersect(result[:0], p, idx.postings[r])
+		p = result
 	}
 
 	return p
@@ -51,8 +54,11 @@ func (idx *Index) Query(s string) []Posting {
 // Filter removes from p all strings that additionally contain characters in s
 func (idx *Index) Filter(p []Posting, s string) []Posting {
 
+	result := make([]Posting, len(p))
+
 	for _, r := range []byte(s) {
-		p = intersect(p, idx.postings[r])
+		result = intersect(result[:0], p, idx.postings[r])
+		p = result
 	}
 
 	return p
@@ -60,11 +66,9 @@ func (idx *Index) Filter(p []Posting, s string) []Posting {
 
 // intersect returns the intersection of two posting lists with the characters
 // in b occuring later in the string than the entries in a
-func intersect(a, b []Posting) []Posting {
+func intersect(result, a, b []Posting) []Posting {
 
 	var aidx, bidx int
-
-	var result []Posting
 
 scan:
 	for aidx < len(a) && bidx < len(b) {
