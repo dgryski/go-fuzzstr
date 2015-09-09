@@ -72,3 +72,24 @@ func TestQuery(t *testing.T) {
 		}
 	}
 }
+
+func TestFilter(t *testing.T) {
+
+	docs := []string{
+		"foobar",
+		"bazbar",
+		"foobaz",
+		"bazfoo",
+		"qux",
+		"zot",
+	}
+
+	idx := NewIndex(docs)
+
+	p := idx.Query("ba")
+	p = idx.Filter(p, "fo")
+
+	if len(p) != 1 || docs[p[0].Doc] != "bazfoo" {
+		t.Errorf("Filter(Query(ba), fo)=%v, want `bazfoo`", p)
+	}
+}
