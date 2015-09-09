@@ -27,6 +27,8 @@ func TestQuery(t *testing.T) {
 		"compactness",
 		"superannuate",
 		"uranist",
+		"日本語",
+		"日本",
 	}
 
 	idx := NewIndex(docs)
@@ -35,6 +37,10 @@ func TestQuery(t *testing.T) {
 		q     string
 		words []string
 	}{
+		{
+			"日本",
+			[]string{"日本語", "日本"},
+		},
 		{
 			"ac",
 			[]string{"grallic", "chalcosine", "compactness"},
@@ -55,7 +61,6 @@ func TestQuery(t *testing.T) {
 
 	for _, tt := range tests {
 		postings := idx.Query(tt.q)
-
 		if len(postings) != len(tt.words) {
 			t.Errorf("Query(%q)=[%d]string, want [%d]string", tt.q, len(postings), len(tt.words))
 			for _, d := range postings {

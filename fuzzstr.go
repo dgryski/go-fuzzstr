@@ -1,6 +1,8 @@
 // Package fuzzstr implements a fuzzy string search in the style of Sublime Text
 package fuzzstr
 
+import "unicode/utf8"
+
 // DocID is a document ID
 type DocID uint32
 
@@ -12,7 +14,7 @@ type Posting struct {
 
 // Index is a character index
 type Index struct {
-	postings  map[byte][]Posting
+	postings  map[rune][]Posting
 	allDocIDs []DocID
 }
 
@@ -20,13 +22,13 @@ type Index struct {
 func NewIndex(docs []string) *Index {
 
 	idx := Index{
-		postings: make(map[byte][]Posting),
+		postings: make(map[rune][]Posting),
 	}
 
 	for id, d := range docs {
 		docid := DocID(id)
 		idx.allDocIDs = append(idx.allDocIDs, docid)
-		for i, r := range []byte(d) {
+		for i, r := range d {
 			idxr := idx.postings[r]
 			idx.postings[r] = append(idxr, Posting{Doc: docid, Pos: uint32(i)})
 		}
@@ -37,12 +39,12 @@ func NewIndex(docs []string) *Index {
 
 // Query returns all documents which contain the letters in s in order
 func (idx *Index) Query(s string) []Posting {
-
-	p := idx.postings[s[0]]
+	r, w := utf8.DecodeRuneInString(s) //Error caught on insertion
+	p := idx.postings[r]
 
 	result := make([]Posting, len(p))
 
-	for _, r := range []byte(s[1:]) {
+	for _, r := range s[w:] {
 		result = intersect(result[:0], p, idx.postings[r])
 		p = result
 	}
@@ -53,10 +55,9 @@ func (idx *Index) Query(s string) []Posting {
 
 // Filter removes from p all strings that additionally contain characters in s
 func (idx *Index) Filter(p []Posting, s string) []Posting {
-
 	result := make([]Posting, len(p))
 
-	for _, r := range []byte(s) {
+	for _, r := range s {
 		result = intersect(result[:0], p, idx.postings[r])
 		p = result
 	}
